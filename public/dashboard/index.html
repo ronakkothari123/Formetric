@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard - Formetric - Forms with Built-In Insights</title>
+
+    <link rel="icon" href="../images/icon.png">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../main.css">
+
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div id="main-wrapper">
+        <div id="sidebar">
+            <div id="sidebar-top">
+                <div id="sidebar-header">
+                    <div>
+                        <img src="../images/icon.png" alt="">
+                        <h1>Formetric</h1>
+                    </div>
+                    <p>v1.0.0</p>
+                </div>
+                <p>General</p>
+                <a href="./" class="active-sidebar-link">
+                    <img src="../images/icons/home.png" alt="">
+                    <p>Dashboard</p>
+                </a>
+                <a href="./?forms">
+                    <img src="../images/icons/forms.png" alt="">
+                    <p>Forms</p>
+                </a>
+                <a href="./?grids">
+                    <img src="../images/icons/grid.png" alt="">
+                    <p>Grids</p>
+                </a>
+                <a href="./?trash">
+                    <img src="../images/icons/trash.png" alt="">
+                    <p>Trash</p>
+                </a>
+            </div>
+            <div id="sidebar-bottom">
+                <a href="../settings/">
+                    <img src="../images/icons/settings.png" alt="">
+                    <p>Settings</p>
+                </a>
+            </div>
+        </div>
+        <div id="parent-container">
+            <div class="container active-container">
+                <h1>Your Dashboard</h1>
+                <div id="dashboard-buttons">
+                    <div class="new-form-btn">
+                        <img src="../images/icons/plus.png" alt="">
+                        <div>
+                            <img src="../images/icons/forms.png" alt="">
+                        </div>
+                        <h1>Create a Form</h1>
+                    </div>
+                    <div class="new-form-btn">
+                        <img src="../images/icons/plus.png" alt="">
+                        <div>
+                            <img src="../images/icons/grid.png" alt="">
+                        </div>
+                        <h1>Create a Grid</h1>
+                    </div>
+                </div>
+                <!--<h2>Recently Viewed Documents</h2>-->
+
+            </div>
+            <div class="container">
+                <h1>All Forms</h1>
+            </div>
+            <div class="container">
+                <h1>All Grids</h1>
+            </div>
+            <div class="container">
+                <h1>Deleted Forms and Grids</h1>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
