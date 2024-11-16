@@ -43,6 +43,7 @@
                 </a>
             </div>
             <div id="sidebar-bottom">
+                <p>Configurations</p>
                 <a href="../settings/">
                     <img src="../images/icons/settings.png" alt="">
                     <p>Settings</p>
@@ -55,21 +56,55 @@
                 <div id="dashboard-buttons">
                     <div class="new-form-btn">
                         <img src="../images/icons/plus.png" alt="">
-                        <div>
+                        <div id="form-dashboard-button">
                             <img src="../images/icons/forms.png" alt="">
                         </div>
                         <h1>Create a Form</h1>
                     </div>
                     <div class="new-form-btn">
                         <img src="../images/icons/plus.png" alt="">
-                        <div>
+                        <div id="grid-dashboard-button">
                             <img src="../images/icons/grid.png" alt="">
                         </div>
                         <h1>Create a Grid</h1>
                     </div>
                 </div>
-                <!--<h2>Recently Viewed Documents</h2>-->
-
+                <!--<h2>Recently Viewed Assets</h2>-->
+                <h2>All Assets</h2>
+                <div id="documents-viewer-header">
+                    <div id="documents-viewer-header-carousel">
+                        <div class="viewer-carousel-element active-carousel-element">View All</div>
+                        <div class="viewer-carousel-element">Forms</div>
+                        <div class="viewer-carousel-element">Grids</div>
+                    </div>
+                    <div id="documents-viewer-search-container">
+                        <div id="documents-viewer-search">
+                            <input type="text">
+                            <img src="../images/icons/search.png" alt="">
+                        </div>
+                        <button class="new-form-btn">
+                            <img src="../images/icons/plus.png" alt="">
+                            <p>New Form</p>
+                        </button>
+                    </div>
+                </div>
+                <div id="selected-documents-editor" style="display:none;">
+                    <button id="bulk-trash-btn">
+                        <img src="../images/icons/trash.png" alt="">
+                        <p>Trash All</p>
+                    </button>
+                </div>
+                <div id="documents-viewer">
+                    <div id="documents-viewer-labels">
+                        <div class="documents-viewer-label">
+                            <div id="master-viewer-checkbox" class="document-viewer-checkbox active-document-viewer-checkbox"></div>
+                        </div>
+                        <div class="documents-viewer-label">Asset Name</div>
+                        <div class="documents-viewer-label">Created By</div>
+                        <div class="documents-viewer-label">Last Modified</div>
+                        <div class="documents-viewer-label"></div>
+                    </div>
+                </div>
             </div>
             <div class="container">
                 <h1>All Forms</h1>

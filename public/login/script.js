@@ -82,7 +82,7 @@ document.getElementById("login-btn").addEventListener("click", async function (e
             window.sessionStorage.setItem('token', message.token);
         }
 
-        location.href = "../dashboard/";
+        location.href = "../home/";
 
     } else if(context === 401 || context === 404) {
         document.querySelectorAll(".alert-message")[0].innerHTML = "Invalid email or password. Please double-check your credentials and try again.";

@@ -60,20 +60,62 @@ app.post('/createForm', authenticateToken, async (req, res) => {
         title: "New Form",
         questions: [], // Empty questions array
         responses: [], // Empty responses array
-        allowedUsers: [userId], // Allow only the creator initially
+        owner: userId, // Owner of the form
+        sharedWith: {}, // Shared users and permissions (initially empty)
         createdAt: createdAt,
+        lastUpdated: createdAt, // Initially same as createdAt
     };
 
-    // Save the form to Firebase Database
     try {
+        // Save the form to Firebase Database
         const formRef = await admin.database().ref('forms').push(newForm);
         const formId = formRef.key; // Get unique form ID from Firebase
         await formRef.update({ formId }); // Save form ID within the form data
+
+        // Add form reference to the user's list of forms
+        await admin.database().ref(`users/${userId}/forms`).push({ formId, lastUpdated: createdAt });
 
         res.status(200).json({ message: "Form created successfully", formId });
     } catch (error) {
         logger.error("Error creating form:", error);
         res.status(500).send("Error creating form");
+    }
+});
+
+app.post('/shareForm', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { formId, targetUserId, permission } = req.body;
+
+    if (!['view', 'edit'].includes(permission)) {
+        return res.status(400).send("Invalid permission type. Use 'view' or 'edit'.");
+    }
+
+    try {
+        const formRef = admin.database().ref(`forms/${formId}`);
+        const snapshot = await formRef.once("value");
+
+        if (!snapshot.exists()) {
+            return res.status(404).send("Form not found.");
+        }
+
+        const formData = snapshot.val();
+
+        if (formData.owner !== userId) {
+            return res.status(403).send("Only the owner can share the form.");
+        }
+
+        // Update sharedWith to include targetUserId and permission
+        await formRef.child("sharedWith").update({
+            [targetUserId]: permission
+        });
+
+        // Add form reference to the target user's list
+        await admin.database().ref(`users/${targetUserId}/sharedForms`).push({ formId, permission });
+
+        res.status(200).json({ message: `Form shared with user ${targetUserId} with ${permission} permission.` });
+    } catch (error) {
+        logger.error("Error sharing form:", error);
+        res.status(500).send("Error sharing form");
     }
 });
 
@@ -119,6 +161,66 @@ app.post('/createUser', async (req, res) => {
             }
         }
     });
+});
+
+app.get('/listForms', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+
+    try {
+        const userForms = [];
+        const userPromises = {};
+
+        // Fetch forms owned by the user
+        const ownedFormsSnapshot = await admin.database().ref('forms').orderByChild('owner').equalTo(userId).once('value');
+        ownedFormsSnapshot.forEach(formSnapshot => {
+            const form = formSnapshot.val();
+            form.permission = 'owner';
+            userForms.push(form);
+
+            // Fetch user details if not already fetched
+            if (!userPromises[form.owner]) {
+                userPromises[form.owner] = admin.database().ref(`users/${form.owner}`).once('value');
+            }
+        });
+
+        // Fetch forms shared with the user
+        const sharedFormsSnapshot = await admin.database().ref('forms').orderByChild(`sharedWith/${userId}`).startAt('').once('value');
+        sharedFormsSnapshot.forEach(formSnapshot => {
+            const form = formSnapshot.val();
+            form.permission = form.sharedWith[userId];
+            userForms.push(form);
+
+            // Fetch user details if not already fetched
+            if (!userPromises[form.owner]) {
+                userPromises[form.owner] = admin.database().ref(`users/${form.owner}`).once('value');
+            }
+        });
+
+        // Wait for all user fetches to resolve
+        const userResults = await Promise.all(Object.values(userPromises));
+        const userMap = {};
+        Object.keys(userPromises).forEach((ownerId, index) => {
+            const userSnapshot = userResults[index].val();
+            userMap[ownerId] = {
+                fullName: userSnapshot?.fullName || 'Unknown User',
+                email: userSnapshot?.email || 'No Email Available'
+            };
+        });
+
+        // Add owner full name and email to each form
+        userForms.forEach(form => {
+            form.ownerFullName = userMap[form.owner]?.fullName;
+            form.ownerEmail = userMap[form.owner]?.email;
+        });
+
+        // Sort forms by lastUpdated in descending order
+        userForms.sort((a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated));
+
+        res.status(200).json(userForms);
+    } catch (error) {
+        logger.error("Error listing forms:", error);
+        res.status(500).send("Error retrieving forms");
+    }
 });
 
 app.post('/login', async (req, res) => {
