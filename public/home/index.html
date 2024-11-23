@@ -14,6 +14,23 @@
     <script src="script.js" defer></script>
 </head>
 <body>
+    <div id="modal-wrapper" style="display:none">
+        <div id="modal-container">
+            <div id="bulk-trash-modal" class="modal">
+                <h1>Confirm Bulk Deletion</h1>
+                <p>Type the following to confirm the deletion of <span id="bulk-deletion-num" class="accent-span">3</span> assets (without quotes).</p>
+                <p>"I Confirm Bulk Deletion"</p>
+                <input id="bulk-deletion-input" type="text">
+                <button id="bulk-deletion-btn">Confirm Deletion</button>
+            </div>
+            <div class="modal">
+
+            </div>
+            <div id="modal-close-btn">
+                <img src="../images/icons/plus.png" alt="Close Modal">
+            </div>
+        </div>
+    </div>
     <div id="main-wrapper">
         <div id="sidebar">
             <div id="sidebar-top">
@@ -29,7 +46,7 @@
                     <img src="../images/icons/home.png" alt="">
                     <p>Dashboard</p>
                 </a>
-                <a href="./?forms">
+                <!--<a href="./?forms">
                     <img src="../images/icons/forms.png" alt="">
                     <p>Forms</p>
                 </a>
@@ -40,7 +57,8 @@
                 <a href="./?trash">
                     <img src="../images/icons/trash.png" alt="">
                     <p>Trash</p>
-                </a>
+                </a>-->
+                <p>Organizations</p>
             </div>
             <div id="sidebar-bottom">
                 <p>Configurations</p>
@@ -79,7 +97,7 @@
                     </div>
                     <div id="documents-viewer-search-container">
                         <div id="documents-viewer-search">
-                            <input type="text">
+                            <input type="text" placeholder="Search...">
                             <img src="../images/icons/search.png" alt="">
                         </div>
                         <button class="new-form-btn">
@@ -97,7 +115,7 @@
                 <div id="documents-viewer">
                     <div id="documents-viewer-labels">
                         <div class="documents-viewer-label">
-                            <div id="master-viewer-checkbox" class="document-viewer-checkbox active-document-viewer-checkbox"></div>
+                            <div id="master-viewer-checkbox" class="document-viewer-checkbox"></div>
                         </div>
                         <div class="documents-viewer-label">Asset Name</div>
                         <div class="documents-viewer-label">Created By</div>

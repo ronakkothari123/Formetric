@@ -58,7 +58,11 @@ app.post('/createForm', authenticateToken, async (req, res) => {
     // Define the new form structure
     const newForm = {
         title: "New Form",
-        questions: [], // Empty questions array
+        sections: [
+            {
+                "header":"Section 1 Header",
+            }
+        ], // Empty questions array
         responses: [], // Empty responses array
         owner: userId, // Owner of the form
         sharedWith: {}, // Shared users and permissions (initially empty)
@@ -223,6 +227,81 @@ app.get('/listForms', authenticateToken, async (req, res) => {
     }
 });
 
+app.post('/deleteForms', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { formIds } = req.body;
+
+    if (!Array.isArray(formIds)) {
+        return res.status(400).send("Invalid request: formIds should be an array.");
+    }
+
+    const deletedForms = [];
+    const permissionsRemoved = [];
+    const notDeletedForms = [];
+
+    try {
+        const deletionPromises = formIds.map(async (formId) => {
+            const formRef = admin.database().ref(`forms/${formId}`);
+            const snapshot = await formRef.once('value');
+
+            if (!snapshot.exists()) {
+                notDeletedForms.push({ formId, reason: "Form not found" });
+                return;
+            }
+
+            const formData = snapshot.val();
+
+            if (formData.owner === userId) {
+                // User is the owner: delete the form
+                await formRef.remove();
+                deletedForms.push(formId);
+
+                // Remove the form reference from the owner's list of forms
+                const userFormsRef = admin.database().ref(`users/${userId}/forms`);
+                const userFormsSnapshot = await userFormsRef.once('value');
+                if (userFormsSnapshot.exists()) {
+                    const userForms = userFormsSnapshot.val();
+                    const formKey = Object.keys(userForms).find(key => userForms[key].formId === formId);
+                    if (formKey) {
+                        await userFormsRef.child(formKey).remove();
+                    }
+                }
+            } else if (formData.sharedWith && formData.sharedWith[userId] === 'edit') {
+                // User has editing permissions: remove the permissions
+                await formRef.child(`sharedWith/${userId}`).remove();
+                permissionsRemoved.push(formId);
+
+                // Remove the form reference from the user's shared forms
+                const userSharedFormsRef = admin.database().ref(`users/${userId}/sharedForms`);
+                const userSharedFormsSnapshot = await userSharedFormsRef.once('value');
+                if (userSharedFormsSnapshot.exists()) {
+                    const sharedForms = userSharedFormsSnapshot.val();
+                    const sharedKey = Object.keys(sharedForms).find(key => sharedForms[key].formId === formId);
+                    if (sharedKey) {
+                        await userSharedFormsRef.child(sharedKey).remove();
+                    }
+                }
+            } else {
+                // User neither owns the form nor has editing permissions
+                notDeletedForms.push({ formId, reason: "User is not the owner or lacks editing permissions" });
+            }
+        });
+
+        // Wait for all operations to complete
+        await Promise.all(deletionPromises);
+
+        res.status(200).json({
+            message: "Deletion process completed",
+            deletedForms,
+            permissionsRemoved,
+            notDeletedForms,
+        });
+    } catch (error) {
+        logger.error("Error deleting forms:", error);
+        res.status(500).send("Error deleting forms");
+    }
+});
+
 app.post('/login', async (req, res) => {
     const { email, password, keepMeSignedIn } = req.body;
 
@@ -313,6 +392,7 @@ app.get('/form/:formId/editor', async (req, res) => {
     logger.info(`Attempting to retrieve form with ID: ${formId}`);
 
     try {
+        // Fetch form data
         const snapshot = await formRef.once("value");
 
         if (!snapshot.exists()) {
@@ -320,19 +400,103 @@ app.get('/form/:formId/editor', async (req, res) => {
             return res.status(404).send("Form not found");
         }
 
-        // Set default values if properties are missing
         const formData = snapshot.val();
+
+        // Set default values if properties are missing
         const title = formData.title || "Untitled Form";
         const createdAt = formData.createdAt || "Unknown Date";
-        const questions = formData.questions || [];
+        const lastUpdated = formData.lastUpdated || "Unknown Date";
+        const sections = formData.sections || [];
+        const ownerId = formData.owner;
+
+        // Fetch owner's name
+        let ownerName = "Unknown Owner";
+        if (ownerId) {
+            const ownerSnapshot = await admin.database().ref(`users/${ownerId}/fullName`).once("value");
+            ownerName = ownerSnapshot.exists() ? ownerSnapshot.val() : "Unknown Owner";
+        }
 
         // Render the formEditor template with the retrieved data
-        res.render("formEditor", { title, formId, createdAt, questions });
+        res.render("formEditor", {
+            title,
+            formId,
+            createdAt,
+            lastUpdated,
+            sections:JSON.stringify(sections).replace(/</g, '\\u003c'),
+            ownerName
+        });
     } catch (error) {
         logger.error("Error loading form:", error);
         res.status(500).send("Error loading form");
     }
 });
 
+app.put('/updateForm', authenticateToken, async (req, res) => {
+    const { formId, title, lastUpdated, sections } = req.body;
+    const userId = req.user.userId;
+
+    try {
+        const formRef = admin.database().ref(`forms/${formId}`);
+        const snapshot = await formRef.once('value');
+
+        if (!snapshot.exists()) {
+            return res.status(404).send("Form not found.");
+        }
+
+        const formData = snapshot.val();
+
+        if (formData.owner !== userId && !formData.sharedWith[userId]?.includes('edit')) {
+            return res.status(403).send("You do not have permission to edit this form.");
+        }
+
+        await formRef.update({ title, lastUpdated, sections });
+        res.status(200).send({ message: "Form updated successfully." });
+    } catch (error) {
+        logger.error("Error updating form:", error);
+        res.status(500).send("Error updating form.");
+    }
+});
+
+
+
+app.post('/shareFormPermissions', authenticateToken, async (req, res) => {
+    const userId = req.user.userId;
+    const { formId, targetUserId, permission } = req.body;
+
+    if (!formId || !targetUserId || !['view', 'edit'].includes(permission)) {
+        return res.status(400).send("Invalid input. Ensure formId, targetUserId, and a valid permission ('view' or 'edit') are provided.");
+    }
+
+    try {
+        const formRef = admin.database().ref(`forms/${formId}`);
+        const snapshot = await formRef.once('value');
+
+        if (!snapshot.exists()) {
+            return res.status(404).send("Form not found.");
+        }
+
+        const formData = snapshot.val();
+
+        if (formData.owner !== userId) {
+            return res.status(403).send("Only the owner can share the form.");
+        }
+
+        await formRef.child("sharedWith").update({
+            [targetUserId]: permission
+        });
+
+        await admin.database().ref(`users/${targetUserId}/sharedForms`).push({
+            formId,
+            permission,
+            sharedBy: userId,
+            sharedAt: new Date().toISOString()
+        });
+
+        res.status(200).json({ message: `Form shared with user ${targetUserId} with ${permission} permission.` });
+    } catch (error) {
+        logger.error("Error sharing form permissions:", error);
+        res.status(500).send("Error sharing form permissions.");
+    }
+});
 
 exports.app = functions.https.onRequest(app);

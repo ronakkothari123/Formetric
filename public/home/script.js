@@ -49,9 +49,27 @@ document.querySelectorAll(".new-form-btn").forEach(button => {
     })
 });
 
-async function loadForms() {
-    console.log("bro")
+function setupSearchInput(){
+    const searchInput = document.querySelector('#documents-viewer-search input');
+    const documents = document.querySelectorAll('.document');
 
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+
+        documents.forEach(document => {
+            const formTitleElement = document.querySelector('h1');
+            const formTitle = formTitleElement ? formTitleElement.textContent.toLowerCase() : '';
+
+            if (formTitle.includes(query)) {
+                document.style.display = 'flex'; // Show matching document
+            } else {
+                document.style.display = 'none'; // Hide non-matching document
+            }
+        });
+    });
+}
+
+async function loadForms() {
     try {
         const response = await fetch(`https://app-hj7jpswabq-uc.a.run.app/listForms`, {
             method: 'GET',
@@ -73,7 +91,12 @@ async function loadForms() {
         const forms = await response.json();
         const documentsViewer = document.getElementById('documents-viewer');
 
-        console.log(forms);
+        // Clear #documents-viewer except #documents-viewer-labels
+        Array.from(documentsViewer.children).forEach(child => {
+            if (!child.id || child.id !== 'documents-viewer-labels') {
+                documentsViewer.removeChild(child);
+            }
+        });
 
         forms.forEach(form => {
             const formId = form.formId;
@@ -147,6 +170,12 @@ function initializeCheckboxToggles() {
             } else {
                 masterCheckbox.classList.remove('active-document-viewer-checkbox');
             }
+
+            if(document.querySelectorAll(".active-document-viewer-checkbox").length > 0){
+                document.getElementById('selected-documents-editor').style.display = "flex";
+            } else {
+                document.getElementById('selected-documents-editor').style.display = "none";
+            }
         });
     });
 
@@ -165,6 +194,12 @@ function initializeCheckboxToggles() {
                 checkbox.classList.add('active-document-viewer-checkbox');
             }
         });
+
+        if(document.querySelectorAll(".active-document-viewer-checkbox").length > 0){
+            document.getElementById('selected-documents-editor').style.display = "flex";
+        } else {
+            document.getElementById('selected-documents-editor').style.display = "none";
+        }
     });
 }
 
@@ -182,9 +217,81 @@ function setupCarouselClickListener() {
     });
 }
 
+async function setupModals() {
+    const modalWrapper = document.getElementById('modal-wrapper');
+    const bulkTrashModal = document.getElementById('bulk-trash-modal');
+    const modals = document.querySelectorAll('.modal');
+    const bulkTrashBtn = document.getElementById('bulk-trash-btn');
+    const modalCloseBtn = document.getElementById('modal-close-btn');
+    const bulkDeletionBtn = document.getElementById('bulk-deletion-btn');
+    const bulkDeletionInput = document.getElementById('bulk-deletion-input');
+    const activeCheckboxes = () => document.querySelectorAll('.active-document-viewer-checkbox');
+
+    bulkTrashBtn.addEventListener('click', () => {
+        modalWrapper.style.display = 'flex';
+        modals.forEach(modal => modal.classList.remove('active-modal'));
+        bulkTrashModal.classList.add('active-modal');
+    });
+
+    modalCloseBtn.addEventListener('click', () => {
+        modals.forEach(modal => modal.classList.remove('active-modal'));
+        modalWrapper.style.display = 'none';
+    });
+
+    bulkDeletionBtn.addEventListener('click', async () => {
+        if (bulkDeletionInput.value !== "I Confirm Bulk Deletion") return;
+
+        const formIds = Array.from(document.querySelectorAll('.active-document-viewer-checkbox'))
+            .filter(checkbox => checkbox.closest('.document')) // Only include checkboxes inside a `.document`
+            .map(checkbox => checkbox.closest('.document').id) // Extract the IDs of the associated `.document`
+            .filter(id => id); // Ensure no null/undefined IDs are included
+
+        if (formIds.length > 0) {
+            try {
+                const response = await fetch(`https://app-hj7jpswabq-uc.a.run.app/deleteForms`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}`
+                    },
+                    body: JSON.stringify({ formIds })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Deleted Forms:', result.deletedForms);
+                    console.log('Not Deleted Forms:', result.notDeletedForms);
+
+                    formIds.forEach(id => {
+                        const documentElement = document.getElementById(id);
+                        if (documentElement) documentElement.remove();
+                    });
+
+                    modals.forEach(modal => modal.classList.remove('active-modal'));
+                    modalWrapper.style.display = 'none';
+
+                    await loadForms();
+                } else {
+                    console.error('Failed to delete forms');
+                }
+            } catch (error) {
+                console.error('Error during deletion:', error);
+            }
+        } else {
+            console.log('No valid forms selected for deletion.');
+        }
+
+        modals.forEach(modal => modal.classList.remove('active-modal'));
+        modalWrapper.style.display = 'none';
+    });
+}
+
+
 // Run the function when the page loads
 window.addEventListener('DOMContentLoaded', async function(){
-    await loadForms()
+    await loadForms();
+    await setupModals();
+    setupSearchInput();
     setupCarouselClickListener();
     initializeCheckboxToggles();
 });

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <link rel="icon" href="./images/icon.png">
+    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./formEditor.css">
+
+    <!--https://dribbble.com/shots/15131388-Form-Builder-->
+</head>
+<body>
+    <div id="main-wrapper">
+        <div id="navbar">
+            <div id="navbar-left">
+                <a href="./home" id="navbar-logo">
+                    <img src="./images/icon.png" alt="">
+                </a>
+                <div id="navbar-menu">
+                    <h1 id="form-title" contenteditable="true" onfocus="selectText(this)" spellcheck="false">New form</h1>
+                    <p>Form by Ronak Kothari</p>
+                </div>
+            </div>
+            <div id="navbar-middle">
+                <div id="documents-viewer-header-carousel">
+                    <div class="viewer-carousel-element active-carousel-element">Fields</div>
+                    <div class="viewer-carousel-element">Responses</div>
+                    <div class="viewer-carousel-element">Settings</div>
+                </div>
+            </div>
+            <div id="navbar-right">
+                <button class="navbar-btn-primary" id="save-button">
+                    <img src="./images/icons/save.png" alt="">
+                    <p>Save</p>
+                </button>
+                <div class="navbar-btn-secondary">
+                    <img src="./images/icons/dots-vertical.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div id="parent-container">
+            <div class="container active-container">
+                <div id="sidebar">
+                    <div id="components-search">
+                        <input type="text" placeholder="Search Components...">
+                        <img src="./images/icons/search.png" alt="">
+                    </div>
+                    <p>Drag and Drop each element to construct your form</p>
+                    <p>Layout Elements</p>
+                    <div class="components-container">
+                        <div class="component-option">
+                            <img src="./images/icons/grid.png" alt="">
+                            <p>Section</p>
+                        </div>
+                    </div>
+                    <p>Text Elements</p>
+                    <div class="components-container">
+                        <div class="component-option">
+                            <img src="./images/icons/text.png" alt="">
+                            <p>Single-Line</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/align-left.png" alt="">
+                            <p>Paragraph</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/email.png" alt="">
+                            <p>Email Address</p>
+                        </div>
+                    </div>
+                    <p>Numeric/Date Elements</p>
+                    <div class="components-container">
+                        <div class="component-option">
+                            <img src="./images/icons/number.png" alt="">
+                            <p>Number</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/currency.png" alt="">
+                            <p>Currency</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/time.png" alt="">
+                            <p>Time</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/date.png" alt="">
+                            <p>Date</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/date-time.png" alt="">
+                            <p>Date With Time</p>
+                        </div>
+                    </div>
+                    <p>Selection Elements</p>
+                    <div class="components-container">
+                        <div class="component-option">
+                            <img src="./images/icons/toggle.png" alt="">
+                            <p>Toggle</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/dropdown.png" alt="">
+                            <p>Dropdown</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/checkbox.png" alt="">
+                            <p>Checkbox</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/multiple-choice.png" alt="">
+                            <p>Multiple Choice</p>
+                        </div>
+                    </div>
+                    <p>Range/Scale Elements</p>
+                    <div class="components-container">
+                        <div class="component-option">
+                            <img src="./images/icons/slider.png" alt="">
+                            <p>Slider</p>
+                        </div>
+                        <div class="component-option">
+                            <img src="./images/icons/heart.png" alt="">
+                            <p>Rating</p>
+                        </div>
+                    </div>
+                </div>
+                <div id="form-container">
+                    <!--<<div class="section">
+                        <h1 contenteditable="true" onfocus="selectText(this)" spellcheck="false">Section header</h1>
+                        <textarea placeholder="Section Description"></textarea>
+
+                        div class="input-container currency-input-container">
+                            <div class="input-container-header">
+                                <div class="input-container-text">
+                                    <h1 contenteditable="true" onfocus="selectText(this)" spellcheck="false">Question Header</h1>
+                                </div>
+                                <div class="menu-container">
+                                    <img src="./images/icons/dots-vertical.png" alt="Menu" class="menu-toggle">
+                                    <div class="menu">
+                                        <button class="menu-item">
+                                            <img src="./images/icons/exclamation.png" alt="">
+                                            <p>Mark as Required</p>
+                                        </button>
+                                        <button class="menu-item">
+                                            <img src="./images/icons/text.png" alt="">
+                                            <p>Include Description</p>
+                                        </button>
+                                        <button class="menu-item">
+                                            <img src="./images/icons/copy.png" alt="">
+                                            <p>Duplicate</p>
+                                        </button>
+                                        <button class="menu-item">
+                                            <img src="./images/icons/trash.png" alt="">
+                                            <p>Trash</p>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-container-input">
+                                <p>Currency Input</p>
+                            </div>
+                        </div>
+
+                       <div class="section-new-question-btn">
+                            <button>
+                                <img src="./images/icons/plus.png" alt="">
+                                <p>Add Question</p>
+                            </button>
+                        </div>
+                    </div>-->
+                    <div id="new-section-button">
+                        <img src="./images/icons/plus.png" alt="">
+                        <p>New Section</p>
+                    </div>
+                </div>
+                <div id="widgets-container">
+                    <div class="widget">
+                        <div class="widget-close-btn">
+                            <img src="./images/icons/trash.png" alt="">
+                        </div>
+                        <h1>Responses By Time</h1>
+                        <canvas id="response-by-time-chart"></canvas>
+                    </div>
+                    <button id="add-widget">
+                        <img src="./images/icons/plus.png" alt="">
+                        <p>Add Widget</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+        document.querySelector('#components-search input').addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase(); // Get the search term in lowercase
+            const componentOptions = document.querySelectorAll('.component-option');
+
+            componentOptions.forEach(option => {
+                const text = option.querySelector('p').textContent.toLowerCase(); // Get the text content in lowercase
+                if (text.includes(searchTerm)) {
+                    option.style.display = ''; // Show the option if it matches
+                } else {
+                    option.style.display = 'none'; // Hide the option if it doesn't match
+                }
+            });
+        });
+
+        function selectText(element) {
+            const range = document.createRange();
+            const selection = window.getSelection();
+            range.selectNodeContents(element);
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+
+        document.getElementById('save-button').addEventListener('click', async () => {
+            // Extract formId from the URL
+            const urlParams = new URLSearchParams(window.location.pathname.split('/'));
+            const formId = urlParams.get('form').split('/')[1]; // Assumes formId is in the URL as /form/{formId}/editor
+
+            if (!formId) {
+                console.error("Form ID not found in the URL.");
+                return;
+            }
+
+            const formContainer = document.getElementById('form-container');
+            const titleElement = document.querySelector('#form-title'); // Assuming there's an element for the form title
+            const lastUpdated = new Date().toISOString();
+            const sections = [];
+
+            formContainer.querySelectorAll('.section').forEach((section, sectionIndex) => {
+                const header = section.querySelector('h1')?.textContent || `Section ${sectionIndex + 1}`;
+                const description = section.querySelector('textarea')?.value || null;
+
+                const questions = [];
+                section.querySelectorAll('.input-container').forEach((question, questionIndex) => {
+                    const questionId = `question-${sectionIndex + 1}-${questionIndex + 1}`;
+                    const type = Array.from(question.classList).find(cls => cls.endsWith('-input-container')) || 'text-input-container';
+                    const header = question.querySelector('.input-container-text h1')?.textContent || `Question ${questionIndex + 1}`;
+                    const description = question.querySelector('.input-container-text p')?.textContent || null;
+                    const required = question.classList.contains('required-input');
+                    const options = [];
+
+                    if (type === 'multiple-choice-input-container' || type === 'checkbox-input-container' || type === 'dropdown-input-container') {
+                        question.querySelectorAll('.option').forEach(option => {
+                            options.push(option.textContent.trim());
+                        });
+                    } else if (type === 'slider-input-container') {
+                        options.min = parseInt(question.dataset.min || 0, 10);
+                        options.max = parseInt(question.dataset.max || 100, 10);
+                        options.step = parseInt(question.dataset.step || 1, 10);
+                    }
+
+                    questions.push({
+                        questionId,
+                        type,
+                        header,
+                        description,
+                        required,
+                        options
+                    });
+                });
+
+                sections.push({
+                    header,
+                    description,
+                    questions
+                });
+            });
+
+            const formJSON = {
+                lastUpdated,
+                title: titleElement?.textContent || 'Untitled Form',
+                sections
+            };
+
+            console.log(JSON.stringify(formJSON, null, 2));
+
+            try {
+                const response = await fetch(`https://formetric-1.web.app/updateForm`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getToken()}` // Assumes getToken() retrieves a valid JWT
+                    },
+                    body: JSON.stringify({ formId, ...formJSON })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log("Form updated successfully:", result);
+                } else {
+                    const error = await response.json();
+                    console.error("Failed to update form:", error);
+                }
+            } catch (err) {
+                console.error("Error during form update:", err);
+            }
+        });
+
+        document.getElementById("form-title").addEventListener("input", function () {
+            const maxLength = 60;
+            const element = this;
+
+            if (element.innerText.length > maxLength) {
+                // Trim the content to the maximum allowed length
+                element.innerText = element.innerText.substring(0, maxLength);
+
+                // Move the caret to the end of the text
+                const range = document.createRange();
+                const selection = window.getSelection();
+                range.selectNodeContents(element);
+                range.collapse(false); // Move the range to the end
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+
+            // Update the website title dynamically
+            const title = element.innerText.trim() || "Untitled Form";
+            document.title = `${title} - Formetric - Forms with Built-In Insights`;
+        });
+
+        function createSection(){
+            const newSectionButton = document.getElementById('new-section-button');
+            const formContainer = document.getElementById('form-container');
+
+            const newSection = document.createElement('div');
+            newSection.classList.add('section');
+            newSection.innerHTML = `
+            <div class="section-header">
+                <h1 contenteditable="true" onfocus="selectText(this)" spellcheck="false">Section header</h1>
+                <img onclick="this.parentElement.parentElement.remove();" src="./images/icons/trash.png" alt="Delete Section">
+            </div>
+            <textarea placeholder="Section Description"></textarea>
+        `;
+
+            formContainer.insertBefore(newSection, newSectionButton);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let draggedElement = null;
+            let dropTarget = null;
+            const formContainer = document.getElementById('form-container');
+            const newSectionButton = document.getElementById('new-section-button');
+
+            newSectionButton.addEventListener('click', () => {
+                createSection();
+            });
+
+            const createLine = () => {
+                const line = document.createElement('div');
+                line.style.width = '100%';
+                line.style.height = '2px';
+                line.style.backgroundColor = 'var(--accent-color)';
+                line.style.margin = '5px 0';
+                line.classList.add('drop-line');
+                return line;
+            };
+
+            const removeDropLines = () => {
+                document.querySelectorAll('.drop-line').forEach(line => line.remove());
+            };
+
+            const handleDragStart = (e) => {
+                draggedElement = e.target.closest('.component-option');
+                e.dataTransfer.effectAllowed = 'move';
+            };
+
+            const handleDragOver = (e) => {
+                e.preventDefault();
+                const target = e.target.closest('.section, .input-container, textarea');
+                if (target) {
+                    removeDropLines();
+                    const line = createLine();
+                    if (target.classList.contains('section')) {
+                        if (draggedElement.querySelector('p').textContent === 'Section') {
+                            target.insertAdjacentElement('afterend', line);
+                        } else {
+                            const textarea = target.querySelector('textarea');
+                            textarea.insertAdjacentElement('afterend', line);
+                        }
+                    } else if (target.classList.contains('input-container')) {
+                        target.insertAdjacentElement('afterend', line);
+                    } else if (target.tagName === 'TEXTAREA') {
+                        target.insertAdjacentElement('afterend', line);
+                    }
+                    dropTarget = line;
+                }
+            };
+
+            const handleDrop = (e) => {
+                e.preventDefault();
+                if (!dropTarget) return;
+
+                const componentType = draggedElement.querySelector('p').textContent;
+                let newElement;
+
+                if (componentType === 'Section') {
+                    newElement = document.createElement('div');
+                    newElement.classList.add('section');
+                    newElement.innerHTML = `
+            <div class="section-header">
+                <h1 contenteditable="true" onfocus="selectText(this)" spellcheck="false">Section header</h1>
+                <img onclick="this.parentElement.parentElement.remove();" src="./images/icons/trash.png" alt="Delete Section">
+            </div>
+            <textarea placeholder="Section Description"></textarea>
+        `;
+                } else {
+                    const typeClassMap = {
+                        'Single-Line': 'text-input-container',
+                        'Paragraph': 'paragraph-input-container',
+                        'Email Address': 'email-input-container',
+                        'Number': 'number-input-container',
+                        'Currency': 'currency-input-container',
+                        'Time': 'time-input-container',
+                        'Date': 'date-input-container',
+                        'Date With Time': 'date-time-input-container',
+                        'Toggle': 'toggle-input-container',
+                        'Dropdown': 'dropdown-input-container',
+                        'Checkbox': 'checkbox-input-container',
+                        'Multiple Choice': 'multiple-choice-input-container',
+                        'Slider': 'slider-input-container',
+                        'Rating': 'rating-input-container',
+                    };
+
+                    const inputType = typeClassMap[componentType] || 'text-input-container';
+                    newElement = document.createElement('div');
+                    newElement.classList.add('input-container', inputType);
+                    newElement.innerHTML = `
+                <div class="input-container-header">
+                    <div class="input-container-text">
+                        <h1 contenteditable="true" onfocus="selectText(this)" spellcheck="false">Question Header</h1>
+                    </div>
+                    <div class="menu-container">
+                        <img src="./images/icons/dots-vertical.png" alt="Menu" class="menu-toggle">
+                        <div class="menu">
+                            <button class="menu-item">
+                                <img src="./images/icons/exclamation.png" alt="">
+                                <p>Mark as Required</p>
+                            </button>
+                            <button class="menu-item">
+                                <img src="./images/icons/text.png" alt="">
+                                <p>Include Description</p>
+                            </button>
+                            <button class="menu-item">
+                                <img src="./images/icons/copy.png" alt="">
+                                <p>Duplicate</p>
+                            </button>
+                            <button class="menu-item">
+                                <img src="./images/icons/trash.png" alt="">
+                                <p>Trash</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="input-container-input">
+                    <p>${componentType} Input</p>
+                </div>
+            `;
+                }
+
+                dropTarget.insertAdjacentElement('afterend', newElement);
+                removeDropLines();
+            };
+
+            const handleDragEnd = () => {
+                removeDropLines();
+                draggedElement = null;
+                dropTarget = null;
+            };
+
+            document.querySelectorAll('.component-option').forEach(option => {
+                option.setAttribute('draggable', true);
+                option.addEventListener('dragstart', handleDragStart);
+                option.addEventListener('dragend', handleDragEnd);
+            });
+
+            formContainer.addEventListener('dragover', handleDragOver);
+            formContainer.addEventListener('drop', handleDrop);
+
+            const autoResizeTextArea = (textarea) => {
+                textarea.style.height = 'auto'; // Reset height to calculate the new size
+                textarea.style.height = `${textarea.scrollHeight}px`; // Set height to fit content
+            };
+
+            document.querySelectorAll('textarea').forEach((textarea) => {
+                autoResizeTextArea(textarea); // Adjust height on page load
+                textarea.addEventListener('input', () => autoResizeTextArea(textarea)); // Adjust on input
+            });
+
+            document.body.addEventListener('click', (e) => {
+                if (e.target.classList.contains('menu-toggle')) {
+                    const menu = e.target.nextElementSibling;
+                    document.querySelectorAll('.menu').forEach(otherMenu => {
+                        if (otherMenu !== menu) otherMenu.classList.remove('active');
+                    });
+                    menu.classList.toggle('active');
+                } else if (!e.target.closest('.menu')) {
+                    document.querySelectorAll('.menu').forEach(menu => menu.classList.remove('active'));
+                }
+
+                if (e.target.closest('.menu-item')) {
+                    const button = e.target.closest('.menu-item');
+                    const menu = button.closest('.menu');
+                    const container = button.closest('.input-container');
+                    const buttonText = button.querySelector('p').textContent.trim();
+
+                    if (buttonText === 'Trash') {
+                        container.remove();
+                    }
+
+                    if (buttonText === 'Duplicate') {
+                        const clone = container.cloneNode(true);
+                        const header = clone.querySelector('.input-container-text h1');
+                        const description = clone.querySelector('.input-container-text p');
+
+                        header.textContent += ' - Copy';
+                        if (description) description.textContent += ' - Copy';
+
+                        container.parentNode.insertBefore(clone, container.nextSibling);
+                    }
+
+                    if (buttonText === 'Remove Description') {
+                        const description = container.querySelector('.input-container-text p');
+                        if (description) {
+                            description.remove();
+                            button.querySelector('p').textContent = 'Include Description';
+                        }
+                    }
+
+                    if (buttonText === 'Include Description') {
+                        const textContainer = container.querySelector('.input-container-text');
+                        const newDescription = document.createElement('p');
+                        newDescription.setAttribute('contenteditable', 'true');
+                        newDescription.setAttribute('onfocus', 'selectText(this)');
+                        newDescription.setAttribute('spellcheck', 'false');
+                        newDescription.textContent = 'Question Description';
+
+                        textContainer.appendChild(newDescription);
+                        button.querySelector('p').textContent = 'Remove Description';
+                    }
+
+                    if (buttonText === 'Mark as Required') {
+                        container.classList.add('required-input');
+                        button.querySelector('p').textContent = 'Mark as Not Required';
+                    }
+
+                    if (buttonText === 'Mark as Not Required') {
+                        container.classList.remove('required-input');
+                        button.querySelector('p').textContent = 'Mark as Required';
+                    }
+
+                    // Hide the menu after action
+                    menu.classList.remove('active');
+                }
+            });
+
+            createSection();
+        });
+    </script>
+</body>
+</html>

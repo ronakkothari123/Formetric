@@ -14,12 +14,32 @@
 }
 
 body{
-    font-family: 'Inter', sans-serif;
     background:var(--bg-color-1);
     color:var(--font-color-2);
     margin:0;
 }
 
+body * {
+    font-family: 'Inter', sans-serif;
+}
+
 h1{
     color:var(--font-color-1);
+}
+
+*::-webkit-scrollbar {
+    width: 8px; /* Adjust the width of the scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+    background: #dfdfdf;
+}
+
+*::-webkit-scrollbar-thumb {
+    background: #afafaf;;
+    border-radius:5px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-color);
 }
