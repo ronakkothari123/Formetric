@@ -376,144 +376,146 @@
                 sectionDiv.appendChild(description);
 
                 // Add Questions
-                section.questions.forEach((question) => {
-                    const questionDiv = document.createElement('div');
-                    questionDiv.classList.add('input-container', question.type);
-                    questionDiv.setAttribute('data-question-id', question.questionId);
+                if(section.questions){
+                    section.questions.forEach((question) => {
+                        const questionDiv = document.createElement('div');
+                        questionDiv.classList.add('input-container', question.type);
+                        questionDiv.setAttribute('data-question-id', question.questionId);
 
-                    // Question Header
-                    const headerDiv = document.createElement('div');
-                    headerDiv.classList.add('input-container-header');
+                        // Question Header
+                        const headerDiv = document.createElement('div');
+                        headerDiv.classList.add('input-container-header');
 
-                    const textDiv = document.createElement('div');
-                    textDiv.classList.add('input-container-text');
+                        const textDiv = document.createElement('div');
+                        textDiv.classList.add('input-container-text');
 
-                    const questionHeader = document.createElement('h1');
-                    questionHeader.contentEditable = "true";
-                    questionHeader.spellcheck = false;
-                    questionHeader.textContent = question.header || "Question Header";
-                    textDiv.appendChild(questionHeader);
+                        const questionHeader = document.createElement('h1');
+                        questionHeader.contentEditable = "true";
+                        questionHeader.spellcheck = false;
+                        questionHeader.textContent = question.header || "Question Header";
+                        textDiv.appendChild(questionHeader);
 
-                    // Optional Description
-                    if (question.description) {
-                        const questionDescription = document.createElement('p');
-                        questionDescription.contentEditable = "true";
-                        questionDescription.spellcheck = false;
-                        questionDescription.textContent = question.description;
-                        textDiv.appendChild(questionDescription);
-                    }
+                        // Optional Description
+                        if (question.description) {
+                            const questionDescription = document.createElement('p');
+                            questionDescription.contentEditable = "true";
+                            questionDescription.spellcheck = false;
+                            questionDescription.textContent = question.description;
+                            textDiv.appendChild(questionDescription);
+                        }
 
-                    headerDiv.appendChild(textDiv);
+                        headerDiv.appendChild(textDiv);
 
-                    // Menu for Question Actions
-                    const menuContainer = document.createElement('div');
-                    menuContainer.classList.add('menu-container');
+                        // Menu for Question Actions
+                        const menuContainer = document.createElement('div');
+                        menuContainer.classList.add('menu-container');
 
-                    const menuToggle = document.createElement('img');
-                    menuToggle.src = "/images/icons/dots-vertical.png";
-                    menuToggle.alt = "Menu";
-                    menuToggle.classList.add('menu-toggle');
-                    menuContainer.appendChild(menuToggle);
+                        const menuToggle = document.createElement('img');
+                        menuToggle.src = "/images/icons/dots-vertical.png";
+                        menuToggle.alt = "Menu";
+                        menuToggle.classList.add('menu-toggle');
+                        menuContainer.appendChild(menuToggle);
 
-                    const menu = document.createElement('div');
-                    menu.classList.add('menu');
+                        const menu = document.createElement('div');
+                        menu.classList.add('menu');
 
-                    const requiredButton = document.createElement('button');
-                    requiredButton.classList.add('menu-item');
-                    requiredButton.innerHTML = `
-                <img src="/images/icons/exclamation.png" alt="">
-                <p>${question.required ? "Mark as Not Required" : "Mark as Required"}</p>
-            `;
-                    menu.appendChild(requiredButton);
+                        const requiredButton = document.createElement('button');
+                        requiredButton.classList.add('menu-item');
+                        requiredButton.innerHTML = `
+                    <img src="/images/icons/exclamation.png" alt="">
+                    <p>${question.required ? "Mark as Not Required" : "Mark as Required"}</p>
+                `;
+                        menu.appendChild(requiredButton);
 
-                    const descriptionButton = document.createElement('button');
-                    descriptionButton.classList.add('menu-item');
-                    descriptionButton.innerHTML = `
-                <img src="/images/icons/text.png" alt="">
-                <p>${question.description ? "Remove Description" : "Include Description"}</p>
-            `;
-                    menu.appendChild(descriptionButton);
+                        const descriptionButton = document.createElement('button');
+                        descriptionButton.classList.add('menu-item');
+                        descriptionButton.innerHTML = `
+                    <img src="/images/icons/text.png" alt="">
+                    <p>${question.description ? "Remove Description" : "Include Description"}</p>
+                `;
+                        menu.appendChild(descriptionButton);
 
-                    const duplicateButton = document.createElement('button');
-                    duplicateButton.classList.add('menu-item');
-                    duplicateButton.innerHTML = `
-                <img src="/images/icons/copy.png" alt="">
-                <p>Duplicate</p>
-            `;
-                    menu.appendChild(duplicateButton);
+                        const duplicateButton = document.createElement('button');
+                        duplicateButton.classList.add('menu-item');
+                        duplicateButton.innerHTML = `
+                    <img src="/images/icons/copy.png" alt="">
+                    <p>Duplicate</p>
+                `;
+                        menu.appendChild(duplicateButton);
 
-                    const trashButton = document.createElement('button');
-                    trashButton.classList.add('menu-item');
-                    trashButton.innerHTML = `
-                <img src="/images/icons/trash.png" alt="">
-                <p>Trash</p>
-            `;
-                    menu.appendChild(trashButton);
+                        const trashButton = document.createElement('button');
+                        trashButton.classList.add('menu-item');
+                        trashButton.innerHTML = `
+                    <img src="/images/icons/trash.png" alt="">
+                    <p>Trash</p>
+                `;
+                        menu.appendChild(trashButton);
 
-                    menuContainer.appendChild(menu);
-                    headerDiv.appendChild(menuContainer);
-                    questionDiv.appendChild(headerDiv);
+                        menuContainer.appendChild(menu);
+                        headerDiv.appendChild(menuContainer);
+                        questionDiv.appendChild(headerDiv);
 
-                    // Question Input Placeholder
-                    const inputContainer = document.createElement('div');
-                    inputContainer.classList.add('input-container-input');
-                    const inputPlaceholder = document.createElement('p');
+                        // Question Input Placeholder
+                        const inputContainer = document.createElement('div');
+                        inputContainer.classList.add('input-container-input');
+                        const inputPlaceholder = document.createElement('p');
 
-                    switch (question.type) {
-                        case "multiple-choice-input-container":
-                            inputPlaceholder.textContent = "Multiple Choice Input";
-                            break;
-                        case "checkbox-input-container":
-                            inputPlaceholder.textContent = "Checkbox Input";
-                            break;
-                        case "dropdown-input-container":
-                            inputPlaceholder.textContent = "Dropdown Input";
-                            break;
-                        case "slider-input-container":
-                            inputPlaceholder.textContent = "Slider Input";
-                            break;
-                        case "rating-input-container":
-                            inputPlaceholder.textContent = "Rating Input";
-                            break;
-                        case "currency-input-container":
-                            inputPlaceholder.textContent = "Currency Input";
-                            break;
-                        case "paragraph-input-container":
-                            inputPlaceholder.textContent = "Paragraph Input";
-                            break;
-                        case "email-input-container":
-                            inputPlaceholder.textContent = "Email Input";
-                            break;
-                        case "text-input-container":
-                            inputPlaceholder.textContent = "Text Input";
-                            break;
-                        case "number-input-container":
-                            inputPlaceholder.textContent = "Number Input";
-                            break;
-                        case "time-input-container":
-                            inputPlaceholder.textContent = "Time Input";
-                            break;
-                        case "date-input-container":
-                            inputPlaceholder.textContent = "Date Input";
-                            break;
-                        case "date-time-input-container":
-                            inputPlaceholder.textContent = "Date With Time Input";
-                            break;
-                        case "toggle-input-container":
-                            inputPlaceholder.textContent = "Rating Input";
-                            break;
-                        default:
-                            inputPlaceholder.textContent = "Toggle Placeholder";
-                    }
+                        switch (question.type) {
+                            case "multiple-choice-input-container":
+                                inputPlaceholder.textContent = "Multiple Choice Input";
+                                break;
+                            case "checkbox-input-container":
+                                inputPlaceholder.textContent = "Checkbox Input";
+                                break;
+                            case "dropdown-input-container":
+                                inputPlaceholder.textContent = "Dropdown Input";
+                                break;
+                            case "slider-input-container":
+                                inputPlaceholder.textContent = "Slider Input";
+                                break;
+                            case "rating-input-container":
+                                inputPlaceholder.textContent = "Rating Input";
+                                break;
+                            case "currency-input-container":
+                                inputPlaceholder.textContent = "Currency Input";
+                                break;
+                            case "paragraph-input-container":
+                                inputPlaceholder.textContent = "Paragraph Input";
+                                break;
+                            case "email-input-container":
+                                inputPlaceholder.textContent = "Email Input";
+                                break;
+                            case "text-input-container":
+                                inputPlaceholder.textContent = "Text Input";
+                                break;
+                            case "number-input-container":
+                                inputPlaceholder.textContent = "Number Input";
+                                break;
+                            case "time-input-container":
+                                inputPlaceholder.textContent = "Time Input";
+                                break;
+                            case "date-input-container":
+                                inputPlaceholder.textContent = "Date Input";
+                                break;
+                            case "date-time-input-container":
+                                inputPlaceholder.textContent = "Date With Time Input";
+                                break;
+                            case "toggle-input-container":
+                                inputPlaceholder.textContent = "Rating Input";
+                                break;
+                            default:
+                                inputPlaceholder.textContent = "Toggle Placeholder";
+                        }
 
-                    inputContainer.appendChild(inputPlaceholder);
-                    questionDiv.appendChild(inputContainer);
+                        inputContainer.appendChild(inputPlaceholder);
+                        questionDiv.appendChild(inputContainer);
 
-                    // Append question to the section
-                    sectionDiv.appendChild(questionDiv);
-                });
+                        // Append question to the section
+                        sectionDiv.appendChild(questionDiv);
+                    });
 
-                // Append section to the form container
+                }
+
                 formContainer.appendChild(sectionDiv);
             });
 

@@ -431,6 +431,51 @@ app.get('/form/:formId/editor', async (req, res) => {
     }
 });
 
+app.get('/form/:formId/', async (req, res) => {
+    const formId = req.params.formId;
+    const formRef = admin.database().ref(`forms/${formId}`);
+    logger.info(`Attempting to retrieve form with ID: ${formId}`);
+
+    try {
+        // Fetch form data
+        const snapshot = await formRef.once("value");
+
+        if (!snapshot.exists()) {
+            logger.warn(`Form with ID ${formId} not found`);
+            return res.status(404).send("Form not found");
+        }
+
+        const formData = snapshot.val();
+
+        // Set default values if properties are missing
+        const title = formData.title || "Untitled Form";
+        const createdAt = formData.createdAt || "Unknown Date";
+        const lastUpdated = formData.lastUpdated || "Unknown Date";
+        const sections = formData.sections || [];
+        const ownerId = formData.owner;
+
+        // Fetch owner's name
+        let ownerName = "Unknown Owner";
+        if (ownerId) {
+            const ownerSnapshot = await admin.database().ref(`users/${ownerId}/fullName`).once("value");
+            ownerName = ownerSnapshot.exists() ? ownerSnapshot.val() : "Unknown Owner";
+        }
+
+        // Render the formEditor template with the retrieved data
+        res.render("formResponder", {
+            title,
+            formId,
+            createdAt,
+            lastUpdated,
+            sections:JSON.stringify(sections).replace(/</g, '\\u003c'),
+            ownerName
+        });
+    } catch (error) {
+        logger.error("Error loading form:", error);
+        res.status(500).send("Error loading form");
+    }
+});
+
 app.put('/updateForm', authenticateToken, async (req, res) => {
     const { formId, title, lastUpdated, sections } = req.body;
     const userId = req.user.userId;

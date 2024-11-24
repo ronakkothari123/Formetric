@@ -9,8 +9,123 @@
 
     <link rel="icon" href="/images/icon.png">
     <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/formResponder.css">
 </head>
 <body>
+<div id="main-wrapper">
+    <div id="form-wrapper">
+        <h1>{{title}}</h1>
+        <div class="section">
+            <h1>Section Header</h1>
+            <p>Section Body</p>
+            <div class="question-container currency-input-container required-input">
+                <h1>Question Header</h1>
+                <p>Question Description</p>
+                <div class="input-container">
+                    <input type="text" placeholder="Enter your question here">
+                </div>
+            </div>
+            <div class="question-container number-input-container">
+                <h1>Question Header</h1>
+                <div class="input-container">
+                    <input type="text" placeholder="Enter your question here">
+                </div>
+            </div>
+        </div>
+        <div class="section">
+            <h1>Section Header</h1>
+            <p>Section Body</p>
+            <div class="question-container date-input-container required-input">
+                <h1>Question Header</h1>
+                <p>Question Description</p>
+                <div class="input-container">
+                    <input type="text" placeholder="Enter your question here">
+                </div>
+            </div>
+            <div class="question-container text-input-container">
+                <h1>Question Header</h1>
+                <div class="input-container">
+                    <input type="text" placeholder="Enter your question here">
+                </div>
+            </div>
+            <div class="question-container multiple-choice-input-container">
+                <h1>Question Header</h1>
+                <div class="multiple-choice-container">
+                    <div class="multiple-choice-element">
+                        <div class="document-viewer-checkbox"></div>
+                        <p>Multiple Choice Element</p>
+                    </div>
+                    <div class="multiple-choice-element">
+                        <div class="document-viewer-checkbox"></div>
+                        <p>Multiple Choice Element</p>
+                    </div>
+                    <div class="multiple-choice-element">
+                        <div class="document-viewer-checkbox"></div>
+                        <p>Multiple Choice Element</p>
+                    </div>
+                    <div class="multiple-choice-element">
+                        <div class="document-viewer-checkbox"></div>
+                        <p>Multiple Choice Element</p>
+                    </div>
+                </div>
+            </div>
+            <div class="question-container checkbox-input-container">
+                <h1>Question Header</h1>
+                <div class="checkbox-container">
+                    <div class="checkbox-element-container">
+                        <div class="checkbox-element active-checkbox-element"></div>
+                        <p>Checkbox Element</p>
+                    </div>
+                    <div class="checkbox-element-container">
+                        <div class="checkbox-element"></div>
+                        <p>Checkbox Element</p>
+                    </div>
+                    <div class="checkbox-element-container">
+                        <div class="checkbox-element"></div>
+                        <p>Checkbox Element</p>
+                    </div>
+                    <div class="checkbox-element-container">
+                        <div class="checkbox-element"></div>
+                        <p>Checkbox Element</p>
+                    </div>
+                    <div class="checkbox-element-container">
+                        <div class="checkbox-element"></div>
+                        <p>Checkbox Element</p>
+                    </div>
+                </div>
+            </div>
+            <div class="question-container paragraph-input-container">
+                <h1>Question Header</h1>
+                <textarea placeholder="Enter your question here"></textarea>
+            </div>
+        </div>
+        <div id="submit-button-container">
+            <button id="submit-button">
+                <img src="/images/icons/submit.png" alt="">
+                <p>Submit Response</p>
+            </button>
+        </div>
+        <p>This content is neither created nor endorsed by Formetric</p>
+        <p>Want to create forms and receive high level insights? <span><a href="../../">Sign Up with Formetric</a></span></p>
+    </div>
+</div>
 
+<script>
+    async function initialize(){
+        const autoResizeTextArea = (textarea) => {
+            textarea.style.height = 'auto'; // Reset height to calculate the new size
+            textarea.style.height = `${textarea.scrollHeight}px`; // Set height to fit content
+        };
+
+        document.querySelectorAll('textarea').forEach((textarea) => {
+            autoResizeTextArea(textarea); // Adjust height on page load
+            textarea.addEventListener('input', () => autoResizeTextArea(textarea)); // Adjust on input
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        await initialize();
+    });
+</script>
 </body>
 </html>

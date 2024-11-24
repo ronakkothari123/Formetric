@@ -1,0 +1,231 @@
+#main-wrapper{
+    display:flex;
+    position:relative;
+    flex-direction:row;
+    justify-content:center;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    width:100vw;
+    height:calc(100vh - 144px);
+    background:var(--bg-color-2);
+    padding:72px 0;
+}
+
+#form-wrapper{
+    width:640px;
+    display:flex;
+    flex-direction:column;
+    gap:24px;
+}
+
+#form-wrapper > h1{
+    width:100%;
+    font-size:24px;
+    margin:0;
+}
+
+#form-wrapper > p{
+    margin:0;
+    font-size:12px;
+    color:gray;
+}
+
+#submit-button-container{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    margin-bottom:48px;
+}
+
+#submit-button{
+    background:var(--dark-gray);
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:center;
+    outline:none;
+    border:none;
+    border-radius:24px;
+    transition-duration:125ms;
+    cursor:pointer;
+    width:256px;
+    height:48px;
+    gap:18px;
+}
+
+#submit-button:focus{
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+#submit-button:hover{
+    background:var(--accent-color);
+}
+
+#submit-button > img{
+    height:20px;
+    filter:invert(1);
+}
+
+#submit-button > p{
+    margin:0;
+    font-size:16px;
+    color:white;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.section{
+    width:calc(100% - 52px);
+    border:2px solid var(--border-color);
+    background:var(--bg-color-1);
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    border-radius:24px;
+    padding:24px;
+}
+
+.section > h1{
+    margin:0;
+    font-size:24px;
+}
+
+.section > p{
+    font-weight:500;
+    font-size:14px;
+    margin: 0 0 12px;
+    color:gray;
+}
+
+.question-container{
+    display:flex;
+    flex-direction:column;
+    margin-bottom:18px;
+    gap:6px;
+}
+
+.question-container > h1{
+    font-size:16px;
+    margin:0;
+}
+
+.required-input > h1::after{
+    content:"*";
+    color:var(--accent-color);
+    margin-left:6px;
+}
+
+.question-container > p{
+    font-size:14px;
+    color:gray;
+    margin: 0 0 6px;
+}
+
+.question-container > .input-container{
+    width:100%;
+    position:relative;
+    font-size:16px;
+    border-radius:20px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-start;
+}
+
+.question-container > .input-container > input{
+    outline:none;
+    border:2px solid var(--border-color);
+    width:calc(100% - 48px);
+    padding-left:32px;
+    padding-right:12px;
+    border-radius:20px;
+    transition-duration:125ms;
+    height:32px;
+    font-weight:500;
+    font-size:14px;
+}
+
+.question-container > textarea{
+    font-size:14px;
+    color:gray;
+    resize:none;
+    width:calc(100% - 28px);
+    border:2px solid var(--border-color);
+    outline:none;
+    font-weight:500;
+    border-radius:12px;
+    min-height:48px;
+    padding:12px;
+}
+
+.question-container > .input-container > input:focus, .question-container > .input-container > textarea:focus{
+    border:2px solid var(--accent-color);
+}
+
+.question-container > .input-container > input:focus::before{
+    filter:invert(0) !important;
+}
+
+.question-container > .input-container::before{
+    content:'';
+    position:absolute;
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:100%;
+    filter:invert(0.5);
+    width:16px;
+    height:16px;
+    top:10px;
+    left:10px;
+}
+
+.currency-input-container > .input-container::before{
+    background-image:url('./images/icons/currency.png');
+}
+
+.date-input-container > .input-container::before{
+    background-image:url('./images/icons/date.png');
+}
+
+.number-input-container > .input-container::before{
+    background-image:url('./images/icons/number.png');
+}
+
+.time-input-container > .input-container::before{
+    background-image:url('./images/icons/time.png');
+}
+
+.email-input-container > .input-container::before{
+    background-image:url('./images/icons/email.png');
+}
+
+.date-time-input-container > .input-container::before{
+    background-image:url('./images/icons/date-time.png');
+}
+
+.paragraph-input-container > .input-container{
+    height:72px;
+}
+
+.multiple-choice-container, .checkbox-container{
+    display:flex;
+    flex-direction:column;
+    margin:6px 0;
+    gap:12px;
+}
+
+.multiple-choice-element, .checkbox-element-container{
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:12px;
+}
+
+.multiple-choice-element > p, .checkbox-element-container > p{
+    margin:0;
+    font-size:14px;
+    font-weight:500;
+    color:gray;
+}

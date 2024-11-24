@@ -479,16 +479,6 @@
             formContainer.addEventListener('dragover', handleDragOver);
             formContainer.addEventListener('drop', handleDrop);
 
-            const autoResizeTextArea = (textarea) => {
-                textarea.style.height = 'auto'; // Reset height to calculate the new size
-                textarea.style.height = `${textarea.scrollHeight}px`; // Set height to fit content
-            };
-
-            document.querySelectorAll('textarea').forEach((textarea) => {
-                autoResizeTextArea(textarea); // Adjust height on page load
-                textarea.addEventListener('input', () => autoResizeTextArea(textarea)); // Adjust on input
-            });
-
             document.body.addEventListener('click', (e) => {
                 if (e.target.classList.contains('menu-toggle')) {
                     const menu = e.target.nextElementSibling;
@@ -557,6 +547,16 @@
             });
 
             createSection();
+
+            const autoResizeTextArea = (textarea) => {
+                textarea.style.height = 'auto'; // Reset height to calculate the new size
+                textarea.style.height = `${textarea.scrollHeight}px`; // Set height to fit content
+            };
+
+            document.querySelectorAll('textarea').forEach((textarea) => {
+                autoResizeTextArea(textarea); // Adjust height on page load
+                textarea.addEventListener('input', () => autoResizeTextArea(textarea)); // Adjust on input
+            });
         });
     </script>
 </body>

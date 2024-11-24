@@ -136,8 +136,18 @@ async function loadForms() {
                 <div>
                     <p>${lastUpdated}</p>
                 </div>
-                <div>
-                    <img src="../images/icons/dots-vertical.png" alt="">
+                <div class="menu-container">
+                    <img src="../images/icons/dots-vertical.png" alt="Toggle Menu" class="menu-toggle">
+                    <div class="menu">
+                        <button class="menu-item" onclick="window.open('../forms/${formId}/editor', '_blank').focus();">
+                            <img src="../images/icons/external-link.png" alt="">  
+                            <p>Open in New Tab</p>
+                        </button>
+                        <button class="menu-item" onclick="deleteForms(['${formId}'])">
+                            <img src="../images/icons/trash.png" alt="">  
+                            <p>Delete Asset</p>
+                        </button>
+                    </div>
                 </div>
             `;
 
@@ -217,6 +227,42 @@ function setupCarouselClickListener() {
     });
 }
 
+async function deleteForms(formIds){
+    const modalWrapper = document.getElementById('modal-wrapper');
+    const modals = document.querySelectorAll('.modal');
+
+    try {
+        const response = await fetch(`https://app-hj7jpswabq-uc.a.run.app/deleteForms`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify({ formIds })
+        });
+
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Deleted Forms:', result.deletedForms);
+            console.log('Not Deleted Forms:', result.notDeletedForms);
+
+            formIds.forEach(id => {
+                const documentElement = document.getElementById(id);
+                if (documentElement) documentElement.remove();
+            });
+
+            modals.forEach(modal => modal.classList.remove('active-modal'));
+            modalWrapper.style.display = 'none';
+
+            await loadForms();
+        } else {
+            console.error('Failed to delete forms');
+        }
+    } catch (error) {
+        console.error('Error during deletion:', error);
+    }
+}
+
 async function setupModals() {
     const modalWrapper = document.getElementById('modal-wrapper');
     const bulkTrashModal = document.getElementById('bulk-trash-modal');
@@ -241,42 +287,13 @@ async function setupModals() {
     bulkDeletionBtn.addEventListener('click', async () => {
         if (bulkDeletionInput.value !== "I Confirm Bulk Deletion") return;
 
-        const formIds = Array.from(document.querySelectorAll('.active-document-viewer-checkbox'))
+        const formIds = Array.from(activeCheckboxes())
             .filter(checkbox => checkbox.closest('.document')) // Only include checkboxes inside a `.document`
             .map(checkbox => checkbox.closest('.document').id) // Extract the IDs of the associated `.document`
             .filter(id => id); // Ensure no null/undefined IDs are included
 
         if (formIds.length > 0) {
-            try {
-                const response = await fetch(`https://app-hj7jpswabq-uc.a.run.app/deleteForms`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${getToken()}`
-                    },
-                    body: JSON.stringify({ formIds })
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    console.log('Deleted Forms:', result.deletedForms);
-                    console.log('Not Deleted Forms:', result.notDeletedForms);
-
-                    formIds.forEach(id => {
-                        const documentElement = document.getElementById(id);
-                        if (documentElement) documentElement.remove();
-                    });
-
-                    modals.forEach(modal => modal.classList.remove('active-modal'));
-                    modalWrapper.style.display = 'none';
-
-                    await loadForms();
-                } else {
-                    console.error('Failed to delete forms');
-                }
-            } catch (error) {
-                console.error('Error during deletion:', error);
-            }
+            await deleteForms(formIds)
         } else {
             console.log('No valid forms selected for deletion.');
         }
@@ -294,4 +311,35 @@ window.addEventListener('DOMContentLoaded', async function(){
     setupSearchInput();
     setupCarouselClickListener();
     initializeCheckboxToggles();
+
+    document.body.addEventListener('click', (e) => {
+        if (e.target.classList.contains('menu-toggle')) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log("sdif")
+
+            const menu = e.target.nextElementSibling;
+            document.querySelectorAll('.menu').forEach(otherMenu => {
+                if (otherMenu !== menu) otherMenu.classList.remove('active');
+            });
+            menu.classList.toggle('active');
+        } else if (!e.target.closest('.menu')) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            document.querySelectorAll('.menu').forEach(menu => menu.classList.remove('active'));
+        }
+
+        if (e.target.closest('.menu-item')) {
+            const button = e.target.closest('.menu-item');
+            const menu = button.closest('.menu');
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            // Hide the menu after action
+            menu.classList.remove('active');
+        }
+    });
 });
